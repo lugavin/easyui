@@ -1,0 +1,23 @@
+{
+  "page": 1,
+  "pageSize": 10,
+  "items": [
+    {
+      "id": "1001",
+      "code": "admin",
+      "name": "管理员",
+      "remark": ""
+    },
+    {
+      "id": "c134e1be-8993-4365-a60f-2037cda69101",
+      "code": "Guest",
+      "name": "普通用户"
+    }
+  ],
+  "totalItems": 2,
+  "totalPages": 1,
+  "offset": 0,
+  "first": true,
+  "last": true,
+  "itemsSize": 2
+}

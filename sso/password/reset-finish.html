@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <base href="../../">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>密码重置 &middot; emall.com</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/bootstrap-validator/css/bootstrap.validator.css">
+    <style type="text/css">
+        body {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <label class="h2">Reset password</label>
+            <!--
+            <div class="alert alert-danger">
+                <strong>The password reset key is missing.</strong>
+            </div>
+            <div class="alert alert-warning">
+                <p>Choose a new password</p>
+            </div>
+            <div class="alert alert-danger">
+                <p>Your password couldn't be reset. Remember a password request is only valid for 24 hours.</p>
+            </div>
+            <div class="alert alert-success">
+                <p>
+                    <strong>Your password has been reset.</strong>
+                    Please <a class="alert-link" href="../login.html">sign in</a>.
+                </p>
+            </div>
+            <div class="alert alert-danger">
+                The password and its confirmation do not match!
+            </div>
+            -->
+            <div>
+                <form id="reset-form" name="form" action="/rest/sso/account/reset-password/finish" role="form">
+                    <div class="form-group">
+                        <label class="control-label" for="password">New password</label>
+                        <input id="password" name="password" type="password" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="confirmPassword">New password confirmation</label>
+                        <input id="confirmPassword" name="confirmPassword" type="password" class="form-control">
+                    </div>
+                    <button id="btn-reset" type="submit" class="btn btn-primary">Reset Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/jquery/jquery.js"></script>
+<script src="../assets/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/bootstrap-validator/js/bootstrap.validator.js"></script>
+<script src="../assets/bootstrap-validator/js/language/zh_CN.js"></script>
+<script src="../assets/app/js/Namespace.js"></script>
+<script src="../assets/app/js/Base.js"></script>
+<script src="../assets/app/js/Subject.js"></script>
+<script src="../assets/app/js/jquery.ext.js"></script>
+<script>
+
+    var key = Base.getURLParam('key');
+
+    $(function () {
+
+        $('#reset-form').bootstrapValidator({
+            submitButtons: '[type="submit"]'
+        }).on('success.form.bv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target);
+            var $btn = $('#btn-reset').button('loading');
+            $.ajax({
+                url: $form.attr('action'),
+                type: 'POST',
+                data: JSON.stringify({key: key, newPassword: $('#password').val()}),
+                contentType: 'application/json',
+                success: function () {
+                },
+                error: function () {
+                    $btn.button('reset');
+                }
+            });
+        });
+
+    });
+
+</script>
+</body>
+</html>

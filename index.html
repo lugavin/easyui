@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>首页 &middot; emall.com</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/jquery-fullpage/css/jquery.fullpage.css">
+    <style type="text/css">
+        #pagination {
+            margin: 0;
+            padding: 8px 4px;
+            position: fixed;
+            height: auto;
+            right: 30px !important;
+            top: 30%;
+            z-index: 999;
+            width: 32px;
+            counter-reset: section;
+        }
+
+        #pagination li {
+            list-style: none;
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            margin: 0 0 4px 0;
+            cursor: pointer;
+        }
+
+        #pagination li:before {
+            content: counter(section);
+            counter-increment: section;
+            font-size: 12px;
+            position: relative;
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #344a5f;
+            text-align: center;
+            vertical-align: middle;
+            top: 23px;
+            left: -2px;
+            background-color: #344a5f;
+            border-radius: 22px;
+            color: #FFF;
+            opacity: 0;
+            line-height: 1.55;
+            -webkit-transition: opacity 0.15s ease-in-out 0.1s;
+            -moz-transition: opacity 0.15s ease-in-out 0.1s;
+            transition: opacity 0.15s ease-in-out 0.1s;
+        }
+
+        #pagination li:hover:before {
+            opacity: 1;
+            -webkit-transition: opacity 0.15s ease-in-out 0.1s;
+            -moz-transition: opacity 0.15s ease-in-out 0.1s;
+            transition: opacity 0.15s ease-in-out 0.1s;
+        }
+
+        #pagination li a > span {
+            border-radius: 100%;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            border: 1px solid #344a5f;
+            display: block;
+        }
+
+        #pagination li a > span > span {
+            border-radius: 100%;
+            width: 12px;
+            height: 12px;
+            line-height: 12px;
+            border: 1px solid #344a5f;
+            display: block;
+            margin: 4px;
+        }
+
+        #pagination li.active a > span {
+            border: 1px dashed #344a5f;
+        }
+
+        #pagination li.active a > span > span {
+            background: #344a5f;
+        }
+
+        #pagination li:last-child {
+            margin: 0;
+        }
+
+        .section {
+            font: 50px "Microsoft Yahei";
+            color: #fff;
+            text-align: center;
+            height: 100vh;
+            background-size: cover;
+        }
+
+        #section1 p {
+            display: none;
+        }
+
+        #section2 p {
+            position: relative;
+            left: -120%;
+        }
+
+        #section3 p {
+            position: relative;
+            bottom: -120%;
+        }
+
+        #section4 p {
+            display: none;
+        }
+
+        #section1 {
+            background: url(assets/app/img/bg1.jpg) no-repeat 50% 50%;
+        }
+
+        #section2 {
+            background: url(assets/app/img/bg2.jpg) no-repeat 50% 50%;
+        }
+
+        #section3 {
+            background: url(assets/app/img/bg3.jpg) no-repeat 50% 50%;
+        }
+
+        #section4 {
+            background: url(assets/app/img/bg4.jpg) no-repeat 50% 50%;
+        }
+    </style>
+</head>
+<body>
+<ul id="pagination">
+    <li data-menuanchor="page1" class="active">
+        <a href="#page1"><span><span></span></span></a>
+    </li>
+    <li data-menuanchor="page2">
+        <a href="#page2"><span><span></span></span></a>
+    </li>
+    <li data-menuanchor="page3">
+        <a href="#page3"><span><span></span></span></a>
+    </li>
+    <li data-menuanchor="page4">
+        <a href="#page4"><span><span></span></span></a>
+    </li>
+</ul>
+<div id="fullpage">
+    <div id="section1" class="section">
+        <p>JCloud = CMS + SSO + OSS + Redis + Elasticsearch</p>
+    </div>
+    <div id="section2" class="section">
+        <p>JCloud = CMS + SSO + OSS + Redis + Elasticsearch</p>
+    </div>
+    <div id="section3" class="section">
+        <p>JCloud = CMS + SSO + OSS + Redis + Elasticsearch</p>
+    </div>
+    <div id="section4" class="section">
+        <p>JCloud = CMS + SSO + OSS + Redis + Elasticsearch</p>
+    </div>
+</div>
+<script src="assets/jquery/jquery.js"></script>
+<script src="assets/jquery-fullpage/js/jquery.fullpage.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+
+        $.extend($.easing, {
+            easeOutExpo: function (x, t, b, c, d) {
+                return (t == d) ? b + c : c * (-Math.pow(2, -10 * t / d) + 1) + b;
+            },
+            easeInOutCubic: function (x, t, b, c, d) {
+                if ((t /= d / 2) < 1) return c / 2 * t * t * t + b;
+                return c / 2 * ((t -= 2) * t * t + 2) + b;
+            }
+        });
+
+        $('#fullpage').fullpage({
+            menu: '#pagination',
+            anchors: ['page1', 'page2', 'page3', 'page4'],
+            sectionsColor: ['#1bbc9b', '#4bbfc3', '#7baabe', '#f90'],
+            afterLoad: function (anchorLink, index) {
+                if (index == 1) {
+                    $(this).find('p').fadeIn(2000);
+                }
+                if (index == 2) {
+                    $(this).find('p').delay(500).animate({
+                        left: '0'
+                    }, 1500, 'easeOutExpo');
+                }
+                if (index == 3) {
+                    $(this).find('p').delay(500).animate({
+                        bottom: '0'
+                    }, 1500, 'easeOutExpo');
+                }
+                if (index == 4) {
+                    $(this).find('p').fadeIn(2000);
+                }
+            },
+            onLeave: function (index, direction) {
+                if (index == 1) {
+                    $(this).find('p').fadeOut(2000);
+                }
+                if (index == '2') {
+                    $(this).find('p').delay(500).animate({
+                        left: '-120%'
+                    }, 1500, 'easeOutExpo');
+                }
+                if (index == '3') {
+                    $(this).find('p').delay(500).animate({
+                        bottom: '-120%'
+                    }, 1500, 'easeOutExpo');
+                }
+                if (index == '4') {
+                    $(this).find('p').fadeOut(2000);
+                }
+            }
+        });
+
+        $('#pagination').on('click', 'li', function () {
+            $(this).siblings().has('.active').removeClass('active');
+            $(this).addClass('active');
+            $.fn.fullpage.moveTo($(this).data('menuanchor'));
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<div class="easyui-layout" data-options="fit: true, border: false">
+    <div data-options="region: 'north', border: false, collapsed: false">
+        <div class="easyui-panel" data-options="fit: true, border: false, title: '条件信息'"
+             style="height: 120px; overflow: hidden;">
+            <form id="user-form" style="height: 85px; margin: 5px 15px;">
+                <table>
+                    <tr>
+                        <td align="right">用户名</td>
+                        <td><input name="username"/></td>
+                    </tr>
+                    <tr>
+                        <td align="right">创建日期</td>
+                        <td>
+                            <input name="createStartDate" class="easyui-datebox" data-options="editable:false"/>
+                            <label>至</label>
+                            <input name="createEndDate" class="easyui-datebox" data-options="editable:false"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">最后更新日期</td>
+                        <td>
+                            <input name="modifyStartDate" class="easyui-datebox" data-options="editable:false"/>
+                            <label>至</label>
+                            <input name="modifyEndDate" class="easyui-datebox" data-options="editable:false"/>
+                            &nbsp;
+                            <a id="user-form-search" class="easyui-linkbutton"><i class="fa fa-search"></i> 查询</a>
+                            &nbsp;
+                            <a id="user-form-reset" class="easyui-linkbutton"><i class="fa fa-refresh"></i> 重置</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div data-options="region: 'center', border: false">
+        <table id="user-grid"></table>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        $('#user-grid').datagrid({
+            idField: 'id',
+            title: '用户列表',
+            url: '../data/users.json',
+            method: 'GET',
+            fit: true,
+            nowrap: false,
+            fitColumns: true,
+            pagination: true,
+            rownumbers: true,
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            columns: [[
+                {field: 'username', title: '用户名', width: 80},
+                {field: 'nickname', title: '昵称', width: 100},
+                {field: 'email', title: '邮箱', width: 100},
+                {field: 'phone', title: '手机号', width: 100},
+                {
+                    field: 'activated',
+                    title: '状态',
+                    width: 60,
+                    formatter: function (value, row) {
+                        return {
+                            true: '<span class="label label-success">已激活</span>',
+                            false: '<span class="label label-danger">未激活</span>'
+                        }[value];
+                    }
+                },
+                {field: 'createdBy', title: '创建人', width: 100},
+                {field: 'createdDate', title: '创建时间', width: 120},
+                {field: 'lastModifiedBy', title: '最近修改人', width: 100},
+                {field: 'lastModifiedDate', title: '最近修改时间', width: 120}
+            ]],
+            toolbar: [{
+                iconCls: 'fa fa-plus',
+                handler: function () {
+                    $('<div>').dialog({
+                        top: '25%',
+                        width: 650,
+                        modal: true,
+                        title: '添加用户',
+                        href: 'user/add.html',
+                        onClose: function () {
+                            $(this).dialog('destroy');
+                        }
+                    });
+                }
+            }, '-', {
+                iconCls: 'fa fa-pencil',
+                handler: function () {
+                    alert('edit');
+                }
+            }, '-', {
+                iconCls: 'fa fa-minus',
+                handler: function () {
+                    alert('remove');
+                }
+            }],
+            loadFilter: function (resp) {
+                return {rows: resp['items'], total: resp['totalItems']};
+            }
+        });
+
+        $('#user-form-search').click(function () {
+            $('#user-grid').datagrid('load', $('#user-form').serializeObject());
+        });
+
+        $('#user-form-reset').click(function () {
+            $('#user-form').form('clear');
+            $('#user-grid').datagrid('load', {});
+        });
+
+    });
+</script>

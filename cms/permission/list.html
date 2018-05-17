@@ -1,0 +1,96 @@
+<div class="easyui-panel" data-options="fit: true, border: false">
+    <table id="perm-grid"></table>
+</div>
+<div id="perm-menu" class="easyui-menu">
+    <div data-options="name:1, iconCls:'fa fa-plus'">添加权限</div>
+    <div data-options="name:2, iconCls:'fa fa-edit'">修改权限</div>
+    <div data-options="name:3, iconCls:'fa fa-remove'">删除权限</div>
+</div>
+<script type="text/javascript">
+    $(function () {
+
+        $('#perm-grid').treegrid({
+            title: '权限列表',
+            idField: 'id',      // 数据表格主键
+            treeField: 'name',  //定义树节点的字段
+            url: '../data/permissions.json',
+            method: 'GET',
+            fit: true,
+            border: false,
+            fitColumns: true,
+            rownumbers: true,
+            columns: [[
+                {field: 'name', title: '名称', width: 100},
+                {
+                    field: 'type',
+                    title: '类型',
+                    width: 60,
+                    formatter: function (value, row) {
+                        return {
+                            MENU: '<span class="label label-danger">菜单</span>',
+                            FUNC: '<span class="label label-success">功能</span>'
+                        }[value];
+                    }
+                },
+                {field: 'code', title: '编码', width: 100},
+                {field: 'url', title: '地址', width: 150},
+                {field: 'seq', title: '序号', width: 60},
+                {field: 'icon', title: '图标', width: 100},
+                {
+                    field: 'isParent',
+                    title: '是否父节点',
+                    width: 60,
+                    formatter: function (value, row) {
+                        return {true: '是', false: '否'}[value] || '';
+                    }
+                }
+            ]],
+            loadFilter: function (data) {
+                if (!data || data.length < 1) {
+                    return [];
+                }
+                var idKey = 'id', pidKey = 'parentId', rootPid = null;
+                var group = function (data) {
+                    var dataMap = {};
+                    data.forEach(function (item) {
+                        var pid = item[pidKey] || rootPid;
+                        if (!dataMap[pid]) {
+                            dataMap[pid] = [];
+                        }
+                        dataMap[pid].push(item);
+                    });
+                    return dataMap;
+                };
+                var dataMap = group(data);
+                var buildTree = function (group) {
+                    if (!group) { // Recursive termination condition
+                        return;
+                    }
+                    group.forEach(function (item) {
+                        var children = buildTree(dataMap[item[idKey]]);
+                        if (children && children.length > 0) {
+                            item.children = children;
+                        }
+                    });
+                    return group;
+                };
+                return buildTree(dataMap[rootPid]);
+            },
+            onContextMenu: function (e, row) {		//当右键点击节点时触发
+                e.preventDefault();					//屏蔽浏览器菜单
+                $(this).treegrid('unselectAll');	//清除所有选中项
+                $(this).treegrid('select', row.id);	//选中状态
+                $('#perm-menu').menu('show', {
+                    top: e.pageY,
+                    left: e.pageX,
+                    minWidth: 100,
+                    hideOnUnhover: false,
+                    onClick: function (item) {
+                        console.info(row, item.name);
+                    }
+                });
+            }
+        });
+
+    });
+</script>

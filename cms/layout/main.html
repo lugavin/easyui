@@ -1,0 +1,61 @@
+<!--
+使用Tab选项卡加载菜单的HTML片段可能导致不同菜单页面的ID重复, 解决方案:
+(1)避免使用ID选择器, 大型项目中以模块作为选择器前缀;
+(2)避免使用Tab选项卡, 每次点击菜单将主体内容切换掉;
+(3)使用iframe, 但又会导致页面的JS和CSS加载多次.
+-->
+<div id="page-wrapper" class="easyui-tabs" data-options="fit:true, border:true">
+    <div data-options="href:'layout/welcome.html', title:'Welcome'"></div>
+</div>
+<div id="tabs-menu" class="easyui-menu">
+    <div data-options="name:1">刷新</div>
+    <div class="menu-sep"></div>
+    <div data-options="name:2">关闭</div>
+    <div data-options="name:3">关闭其他</div>
+    <div data-options="name:4">关闭所有</div>
+</div>
+<script type="text/javascript">
+    $(function () {
+
+        var $wrapper = $('#page-wrapper').tabs({
+            onContextMenu: function (e, title) {
+                e.preventDefault();
+                $('#tabs-menu').menu('show', {
+                    top: e.pageY,
+                    left: e.pageX,
+                    minWidth: 100,
+                    hideOnUnhover: false,
+                    onClick: function (item) {
+                        if (item.name === 1) {
+                            return $wrapper.tabs('getTab', title).panel('refresh');
+                        }
+                        if (item.name === 2) {
+                            return $wrapper.tabs('close', title);
+                        }
+
+                        var allTabTitles = [];
+                        var allTabs = $wrapper.tabs('tabs');
+                        $.each(allTabs, function (i, n) {
+                            var opt = $(n).panel("options");
+                            if (opt.closable) {
+                                allTabTitles.push(opt.title);
+                            }
+                        });
+
+                        if (item.name === 3) {
+                            allTabTitles.forEach(function (t) {
+                                t != title && $wrapper.tabs('close', t);
+                            });
+                            $wrapper.tabs('select', title);
+                        } else {
+                            allTabTitles.forEach(function (t) {
+                                $wrapper.tabs('close', t);
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+    });
+</script>

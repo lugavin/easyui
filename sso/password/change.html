@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h2>[<b>admin</b>]的密码</h2>
+            <!--
+            <div class="alert alert-success">
+                <strong>密码修改成功!</strong>
+            </div>
+            <div class="alert alert-danger">
+                <strong>发生错误!</strong> 密码无法被修改.
+            </div>
+            -->
+            <div class="alert alert-danger">您输入的密码和确认密码不匹配!</div>
+            <form name="form" role="form" autocomplete="off">
+                <div class="form-group">
+                    <label class="control-label" for="password">新密码</label>
+                    <input id="password" name="password" type="password"
+                           class="form-control" placeholder="您的新密码">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="confirmPassword">新密码确认</label>
+                    <input id="confirmPassword" name="confirmPassword" type="password"
+                           class="form-control" placeholder="确认您的新密码">
+                </div>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </form>
+        </div>
+    </div>
+</div>

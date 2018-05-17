@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <base href="../../">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>注册 &middot; emall.com</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="assets/noty/css/noty.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/bootstrap-validator/css/bootstrap.validator.css">
+    <style type="text/css">
+        body {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <label class="h3">注册</label>
+            <!--
+            <div class="alert alert-success">
+                <strong>注册成功!</strong> 请检查您的邮箱.
+            </div>
+            <div class="alert alert-danger">
+                <strong>注册失败!</strong> 请稍后再试.
+            </div>
+            <div class="alert alert-danger">
+                <strong>账号已被注册!</strong> 请选择其它账号.
+            </div>
+            <div class="alert alert-danger">
+                <strong>邮件已经被注册!</strong> 请选择其它邮件.
+            </div>
+            <div class="alert alert-danger">
+                您输入的密码和确认密码不匹配!
+            </div>
+            -->
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+            <form id="register-form" name="form" role="form" autocomplete="off">
+                <div class="form-group">
+                    <label class="control-label" for="username">账号</label>
+                    <input id="username" name="username" class="form-control" placeholder="账号"
+                           autofocus="autofocus"
+                           pattern="^[a-z0-9@.]{3,16}$"
+                           data-bv-regexp-message="请输入有效的帐号"
+                           data-bv-notempty="true">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="email">电子邮件</label>
+                    <input id="email" name="email" type="email" class="form-control" placeholder="电子邮件">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="password">密码</label>
+                    <input id="password" name="password" type="password" class="form-control" placeholder="密码">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="confirmPassword">确认密码</label>
+                    <input id="confirmPassword" type="password" class="form-control"
+                           placeholder="确认密码">
+                </div>
+                <button id="btn-register" type="submit" class="btn btn-primary" data-loading-text="注册中...">注册</button>
+            </form>
+            <p></p>
+            <div class="alert alert-warning">
+                已有帐号，<a class="alert-link" href="sso/login.html">请登录</a>！
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/noty/js/noty.js"></script>
+<script src="assets/jquery/jquery.js"></script>
+<script src="assets/bootstrap/js/bootstrap.js"></script>
+<script src="assets/bootstrap-validator/js/bootstrap.validator.js"></script>
+<script src="assets/bootstrap-validator/js/language/zh_CN.js"></script>
+<script src="assets/app/js/Namespace.js"></script>
+<script src="assets/app/js/Base.js"></script>
+<script src="assets/app/js/Subject.js"></script>
+<script src="assets/app/js/jquery.ext.js"></script>
+<script>
+    $(function () {
+        /**
+         * {@link $.fn.bootstrapValidator.DEFAULT_OPTIONS}
+         */
+        $('#register-form').bootstrapValidator({
+            submitButtons: '[type="submit"]'
+        }).on('success.form.bv', function (e) {
+            e.preventDefault();
+            var $form = $(e.target);
+            var $btn = $('#btn-register').button('loading');
+            $.ajax({
+                url: '/rest/sso/account/register',
+                type: 'POST',
+                data: $form.serialize(),
+                success: function () {
+                },
+                error: function () {
+                    $btn.button('reset');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

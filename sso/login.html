@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>登录 &middot; emall.com</title>
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../assets/noty/css/noty.css">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/bootstrap-validator/css/bootstrap.validator.css">
+    <style type="text/css">
+        body {
+            margin: 0;
+            height: 100vh;
+            /*background: url(../assets/app/img/bg.jpg) no-repeat 50% 50%;*/
+            background-color: #f8f8f8;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="panel panel-default" style="margin: 60px 0 20px;">
+                <div class="panel-heading">
+                    <h3 class="panel-title">请登录</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="text-danger">
+                        <!--<strong>登录失败, 请检查您的登录信息并重试一次！</strong>-->
+                        <strong id="login-failure"></strong>
+                    </div>
+                    <p></p>
+                    <form id="login-form" name="form" method="post" action="../cms/index.html" role="form" autocomplete="off">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="control-label sr-only" for="username">帐号</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input id="username" name="username" type="text" class="form-control"
+                                           autofocus="autofocus" autocomplete="off"
+                                           placeholder="用户名/邮箱/已验证的手机号"
+                                           pattern="^[a-z0-9@.]{3,16}$"
+                                           data-bv-regexp-message="请输入有效的帐号"
+                                           data-bv-notempty="true">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label sr-only" for="password">密码</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input id="password" name="password" type="password" class="form-control"
+                                           autocomplete="off" placeholder="密码"
+                                           data-bv-notempty="true">
+                                </div>
+                            </div>
+                            <div class="checkbox">
+                                <label><input name="rememberMe" type="checkbox" value="1">记住我</label>
+                            </div>
+                            <button id="btn-login" type="submit" class="btn btn-success btn-block"
+                                    data-loading-text="登录中...">登录
+                            </button>
+                        </fieldset>
+                    </form>
+                    <p></p>
+
+                    <div class="alert-warning">
+                        <div class="pull-left">
+                            <a href="password/reset.html" class="alert-link">
+                                <small><i class="glyphicon glyphicon-lock"></i> 忘记密码</small>
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <a href="account/register.html" class="alert-link">
+                                <small><i class="glyphicon glyphicon-phone"></i>注册一个新账号</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/noty/js/noty.js"></script>
+<script src="../assets/jquery/jquery.js"></script>
+<script src="../assets/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/bootstrap-validator/js/bootstrap.validator.js"></script>
+<script src="../assets/bootstrap-validator/js/language/zh_CN.js"></script>
+<script src="../assets/app/js/Namespace.js"></script>
+<script src="../assets/app/js/Base.js"></script>
+<script src="../assets/app/js/jquery.ext.js"></script>
+<script>
+    $(function () {
+        /**
+         * $form.serialize() <=> $.param($form.serializeArray()) <=> $.param($form.serializeObject())
+         * ajax参数设置:
+         * - data: 默认情况下, 通过data选项传递进来的数据, 只要不是字符串, 都会处理转化成一个查询字符串, 以配合默认内容类型"application/x-www-form-urlencoded"
+         * - dataType: 预期服务器返回的数据类型
+         * - contentType: 发送信息至服务器时内容编码类型(默认:"application/x-www-form-urlencoded"), 当发送JSON数据时需要设置为"application/json"
+         * {@link $.fn.bootstrapValidator.DEFAULT_OPTIONS}
+         */
+        $('#login-form').bootstrapValidator({
+            submitButtons: '[type="submit"]'
+        }).on('success.form.bv', function (e) {
+            // e.preventDefault();
+            // var $form = $(e.target);
+            // var $btn = $('#btn-login').button('loading');
+            // $.ajax({
+            //     url: '/rest/sso/account/login/1',
+            //     data: $form.serialize(),
+            //     type: 'POST',
+            //     dataType: 'json',
+            //     success: function (resp) {
+            //         var redirectURL = Base.getURLParam('redirectURL');
+            //         location.href = !redirectURL ? '/cms/index.html' : decodeURIComponent(redirectURL)
+            //     },
+            //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+            //         $btn.button('reset');
+            //     }
+            // });
+        });
+
+        /**
+         * @param {String} account
+         * @returns {number} {1: 'USERNAME', 2: 'PHONE', 3: 'EMAIL'};
+         */
+        function getLoginType(account) {
+            return Base.isEmail(account) ? 3 : (Base.isPhone(account) ? 2 : 1);
+        }
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<div class="easyui-layout" data-options="fit: true, border: false">
+    <div data-options="region: 'north', border: false, collapsed: false">
+        <div class="easyui-panel" data-options="fit: true, border: false, title: '条件信息'"
+             style="height: 120px; overflow: hidden;">
+            <form id="role-form" style="height: 85px; margin: 5px 15px;">
+                <table>
+                    <tr>
+                        <td align="right">角色名</td>
+                        <td><input name="username"/></td>
+                    </tr>
+                    <tr>
+                        <td align="right">创建日期</td>
+                        <td>
+                            <input name="createStartDate" class="easyui-datebox" data-options="editable:false"/>
+                            <label>至</label>
+                            <input name="createEndDate" class="easyui-datebox" data-options="editable:false"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">最后更新日期</td>
+                        <td>
+                            <input name="modifyStartDate" class="easyui-datebox" data-options="editable:false"/>
+                            <label>至</label>
+                            <input name="modifyEndDate" class="easyui-datebox" data-options="editable:false"/>
+                            <a id="role-form-search" class="easyui-linkbutton"><i class="fa fa-search"></i> 查询</a>
+                            <a id="role-form-reset" class="easyui-linkbutton"><i class="fa fa-refresh"></i> 重置</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div data-options="region: 'center', border: false">
+        <table id="role-grid"></table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+
+        $('#role-grid').datagrid({
+            idField: 'id',
+            title: '用户列表',
+            url: '../data/roles.json',
+            method: 'GET',
+            fit: true,
+            nowrap: false,
+            fitColumns: true,
+            pagination: true,
+            rownumbers: true,
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            columns: [[
+                {field: 'code', title: '角色编码', width: 100},
+                {field: 'name', title: '角色名', width: 100},
+                {field: 'remark', title: '备注', width: 100}
+            ]],
+            toolbar: [{
+                iconCls: 'fa fa-plus',
+                handler: function () {
+                    $('<div>').window({
+                        top: '25%',
+                        width: 650,
+                        modal: true,
+                        title: '添加角色',
+                        href: 'role/add.html',
+                        minimizable: false,
+                        onClose: function () {
+                            $(this).dialog('destroy');
+                        }
+                    });
+                }
+            }, '-', {
+                iconCls: 'fa fa-pencil',
+                handler: function () {
+                    alert('edit');
+                }
+            }, '-', {
+                iconCls: 'fa fa-minus',
+                handler: function () {
+                    alert('remove');
+                }
+            }],
+            loadFilter: function (resp) {
+                return {rows: resp['items'], total: resp['totalItems']};
+            }
+        });
+
+        $('#role-form-search').click(function () {
+            $('#role-grid').datagrid('load', $('#role-form').serializeObject());
+        });
+
+        $('#role-form-reset').click(function () {
+            $('#role-form').form('clear');
+            $('#role-grid').datagrid('load', {});
+        });
+
+    });
+</script>

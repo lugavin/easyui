@@ -1,0 +1,35 @@
+{
+  "page": 1,
+  "pageSize": 10,
+  "items": [
+    {
+      "id": "101",
+      "username": "admin",
+      "password": "959136085bb41d09c3a913f572c35353",
+      "nickname": "Gavin",
+      "salt": "5d88e5db-c068-403f-97a6-1d688c8bf4bb",
+      "phone": "13878412345",
+      "email": "123@gmail.com",
+      "activated": true,
+      "createdBy": "system",
+      "createdDate": "2018-04-01 21:50:15"
+    },
+    {
+      "id": "2f184e96-ac2e-4378-91b3-7053a59f09a4",
+      "username": "lu774374302",
+      "password": "5c5ca752646e2e4260b70429686c6aae",
+      "salt": "mRALJOhRyPpj4sRQCaI",
+      "email": "lu774374302@qq.com",
+      "langKey": "zh-cn",
+      "activated": true,
+      "createdBy": "system",
+      "createdDate": "2018-05-05 13:33:28"
+    }
+  ],
+  "totalItems": 2,
+  "totalPages": 1,
+  "offset": 0,
+  "first": true,
+  "last": true,
+  "itemsSize": 2
+}

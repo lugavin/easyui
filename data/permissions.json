@@ -1,0 +1,177 @@
+[
+  {
+    "id": "1",
+    "code": "",
+    "name": "系统管理",
+    "type": "MENU",
+    "icon": "",
+    "url": "",
+    "seq": 1,
+    "isParent": true
+  },
+  {
+    "id": "11",
+    "code": "",
+    "name": "用户管理",
+    "type": "MENU",
+    "icon": "",
+    "url": "/cms/user/list.html",
+    "seq": 101,
+    "isParent": true,
+    "parentId": "1"
+  },
+  {
+    "id": "12",
+    "code": "user:create",
+    "name": "用户新增",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 102,
+    "isParent": false,
+    "parentId": "11"
+  },
+  {
+    "id": "13",
+    "code": "user:delete",
+    "name": "用户删除",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 103,
+    "isParent": false,
+    "parentId": "11"
+  },
+  {
+    "id": "14",
+    "code": "user:update",
+    "name": "用户修改",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 104,
+    "isParent": false,
+    "parentId": "11"
+  },
+  {
+    "id": "15",
+    "code": "user:search",
+    "name": "用户查询",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 105,
+    "isParent": false,
+    "parentId": "11"
+  },
+  {
+    "id": "21",
+    "code": "",
+    "name": "角色管理",
+    "type": "MENU",
+    "icon": "",
+    "url": "/cms/role/list.html",
+    "seq": 201,
+    "isParent": true,
+    "parentId": "1"
+  },
+  {
+    "id": "22",
+    "code": "role:create",
+    "name": "角色新增",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 202,
+    "isParent": false,
+    "parentId": "21"
+  },
+  {
+    "id": "23",
+    "code": "role:delete",
+    "name": "角色删除",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 203,
+    "isParent": false,
+    "parentId": "21"
+  },
+  {
+    "id": "24",
+    "code": "role:update",
+    "name": "角色修改",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 204,
+    "isParent": false,
+    "parentId": "21"
+  },
+  {
+    "id": "25",
+    "code": "role:search",
+    "name": "角色查询",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 205,
+    "isParent": false,
+    "parentId": "21"
+  },
+  {
+    "id": "31",
+    "code": "",
+    "name": "权限管理",
+    "type": "MENU",
+    "icon": "",
+    "url": "/cms/permission/list.html",
+    "seq": 301,
+    "isParent": true,
+    "parentId": "1"
+  },
+  {
+    "id": "32",
+    "code": "permission:create",
+    "name": "权限新增",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 302,
+    "isParent": false,
+    "parentId": "31"
+  },
+  {
+    "id": "33",
+    "code": "permission:delete",
+    "name": "权限删除",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 303,
+    "isParent": false,
+    "parentId": "31"
+  },
+  {
+    "id": "34",
+    "code": "permission:update",
+    "name": "权限修改",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 304,
+    "isParent": false,
+    "parentId": "31"
+  },
+  {
+    "id": "35",
+    "code": "permission:search",
+    "name": "权限查询",
+    "type": "FUNC",
+    "icon": "",
+    "url": "",
+    "seq": 305,
+    "isParent": false,
+    "parentId": "31"
+  }
+]

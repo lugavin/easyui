@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <base href="../../">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>密码重置 &middot; emall.com</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/bootstrap-validator/css/bootstrap.validator.css">
+    <style type="text/css">
+        body {
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <label class="h2">重置您的密码</label>
+            <div class="alert alert-warning">
+                <p>请输入您注册时使用的邮件地址</p>
+            </div>
+            <!--
+            <div class="alert alert-danger">
+                <strong>没有与该邮件地址关联的账号.</strong> 请使用其他邮件地址
+            </div>
+            <div class="alert alert-success">
+                <p>已将重置密码的操作说明发送到您的邮箱，请检查邮件.</p>
+            </div>
+            -->
+            <form id="reset-form" name="form" role="form" autocomplete="off">
+                <div class="form-group">
+                    <label class="control-label" for="email">电子邮件</label>
+                    <input id="email" name="email" type="email" class="form-control" placeholder="您的电子邮件"
+                           data-bv-notempty="true">
+                    <!--
+                    <input id="email" name="email" type="email" class="form-control" placeholder="您的电子邮件"
+                           data-bv-notempty="true"
+                           data-bv-emailAddress="true"
+                           data-bv-remote="/rest/sso/user/validateEmail">
+                    -->
+                </div>
+                <button type="submit" class="btn btn-primary" data-loading-text="处理中...">重置密码</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script src="assets/jquery/jquery.js"></script>
+<script src="assets/bootstrap/js/bootstrap.js"></script>
+<script src="assets/bootstrap-validator/js/bootstrap.validator.js"></script>
+<script src="assets/bootstrap-validator/js/language/zh_CN.js"></script>
+<script src="assets/app/js/jquery.ext.js"></script>
+<script>
+    $(function () {
+
+        /**
+         * {@link $.fn.bootstrapValidator.DEFAULT_OPTIONS}
+         */
+        $('#reset-form').bootstrapValidator({
+            submitButtons: '[type="submit"]'
+        }).on('success.form.bv', function (e) {
+            e.preventDefault();
+            var $btn = $('#btn-register').button('loading');
+            $.ajax({
+                url: '/rest/sso/account/reset-password/init',
+                type: 'POST',
+                data: $('#email').val(),
+                contentType: 'application/json',
+                success: function () {
+                },
+                error: function () {
+                    $btn.button('reset');
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+[
+  {
+    "id" : "1",
+    "code" : "",
+    "name" : "系统管理",
+    "type" : "MENU",
+    "icon" : "",
+    "url" : "",
+    "seq" : 1,
+    "isParent" : true
+  },
+  {
+    "id" : "11",
+    "code" : "",
+    "name" : "用户管理",
+    "type" : "MENU",
+    "icon" : "",
+    "url" : "user/list.html",
+    "seq" : 101,
+    "isParent" : true,
+    "parentId" : "1"
+  },
+  {
+    "id" : "21",
+    "code" : "",
+    "name" : "角色管理",
+    "type" : "MENU",
+    "icon" : "",
+    "url" : "role/list.html",
+    "seq" : 201,
+    "isParent" : true,
+    "parentId" : "1"
+  },
+  {
+    "id" : "31",
+    "code" : "",
+    "name" : "权限管理",
+    "type" : "MENU",
+    "icon" : "",
+    "url" : "permission/list.html",
+    "seq" : 301,
+    "isParent" : true,
+    "parentId" : "1"
+  }
+]

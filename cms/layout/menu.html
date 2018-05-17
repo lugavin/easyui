@@ -1,0 +1,88 @@
+<div style="padding: 5px 0;">
+    <ul id="tree-menu"></ul>
+</div>
+<!--
+/*=======================================*/
+/* -------------------------------------
+/* |  EasyUI使用的tree模型包含以下属性:
+/* |    id: 节点id
+/* |    text: 节点显示的文字
+/* |    state: 节点状态(open|closed)
+/* |    checked: 节点是否被选中(true|false)
+/* |    attributes: 节点自定义属性(对象)
+/* |    children: 子节点(数组)
+/* -------------------------------------
+/*=======================================*/
+-->
+<script type="text/javascript">
+    $(function () {
+
+        $('#tree-menu').tree({
+            url: '../data/menus.json',
+            method: 'GET',
+            loadFilter: function (data) {
+                if (!data || data.length < 1) {
+                    return [];
+                }
+                var idKey = 'id', pidKey = 'parentId', rootPid = null;
+                var group = function (respData) {
+                    var dataMap = {};
+                    respData.forEach(function (item) {
+                        var pid = item[pidKey] || rootPid;
+                        if (!dataMap[pid]) {
+                            dataMap[pid] = [];
+                        }
+                        dataMap[pid].push({
+                            id: item.id,
+                            text: item.name,
+                            attributes: item,
+                            children: []
+                        });
+                    });
+                    return dataMap;
+                };
+                var dataMap = group(data);
+                var buildTree = function (group) {
+                    if (!group) { // Recursive termination condition
+                        return;
+                    }
+                    group.forEach(function (item) {
+                        var children = buildTree(dataMap[item[idKey]]);
+                        if (children && children.length > 0) {
+                            item.children = children;
+                        }
+                    });
+                    return group;
+                };
+                return buildTree(dataMap[rootPid]);
+            },
+            onClick: function (treeNode) {
+                addTab(treeNode);
+            }
+        });
+
+        function addTab(treeNode) {
+            var $wrapper = $('#page-wrapper');
+            if ($wrapper.tabs('exists', treeNode.text)) {
+                $wrapper.tabs('select', treeNode.text);
+            } else {
+                var attr = treeNode.attributes;
+                if (attr && attr.url) {
+                    $wrapper.tabs('add', {
+                        closable: true,
+                        title: treeNode.text,
+                        href: attr.url,
+                        // content: $('<iframe class="main-content" frameborder="0"></iframe>').attr('src', attr.url),
+                        tools: [{
+                            iconCls: 'icon-mini-refresh',
+                            handler: function () {
+                                $wrapper.tabs('getTab', treeNode.text).panel('refresh');
+                            }
+                        }]
+                    });
+                }
+            }
+        }
+
+    });
+</script>

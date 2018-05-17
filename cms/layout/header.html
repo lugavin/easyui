@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="navbar-default">
+        <div class="pull-left">
+            <a href="/index.html" target="_blank"><i class="fa fa-home"></i> 首页</a>&emsp;
+            <strong><i class="fa fa-user"></i> Hi, <span id="user-account">Guest</span></strong>
+        </div>
+        <div class="pull-right">
+            <div style="height: 30px;">
+                <a href="#" class="easyui-menubutton" style="height: 100%;" data-options="menu:'#dropdown-menu-theme'">更换主题</a>
+                <a href="#" class="easyui-menubutton" style="height: 100%;" data-options="menu:'#dropdown-menu-config'">控制面板</a>
+                <a href="#" class="easyui-menubutton" style="height: 100%;" data-options="menu:'#dropdown-menu-exit'">退出系统</a>
+            </div>
+            <div id="dropdown-menu-theme">
+                <div onclick="changeTheme('default')" data-options="iconCls:'icon-metro'">default</div>
+                <div onclick="changeTheme('gray')" data-options="iconCls:'icon-metro'">gray</div>
+                <div onclick="changeTheme('metro')" data-options="iconCls:'icon-metro'">metro</div>
+                <div onclick="changeTheme('metro-blue')" data-options="iconCls:'icon-metro'">blue</div>
+                <div onclick="changeTheme('metro-green')" data-options="iconCls:'icon-metro'">green</div>
+                <div onclick="changeTheme('metro-orange')" data-options="iconCls:'icon-metro'">orange</div>
+                <div onclick="changeTheme('metro-red')" data-options="iconCls:'icon-metro'">red</div>
+            </div>
+            <div id="dropdown-menu-config">
+                <div onclick="changePassword();">修改密码</div>
+                <div onclick="showUserInfo();" data-options="iconCls:'icon-user'">个人信息</div>
+            </div>
+            <div id="dropdown-menu-exit">
+                <div onclick="lockScreen();" data-options="iconCls:'fa fa-lock'">锁屏</div>
+                <div onclick="logout();" data-options="iconCls:'fa fa-power-off'">注销</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<script src="/rest/sso/account?jsonpCallback=Subject.setSubject"></script>-->
+<script>
+    /**
+     * @namespace Subject
+     */
+    Namespace.register('Subject');
+
+    var subject = {};
+
+    Subject.setSubject = function (activeUser) {
+        subject = activeUser || {};
+    };
+
+    Subject.getSubject = function () {
+        return subject;
+    }
+</script>
+<script src="../data/subject.js"></script>
+<script>
+
+    $(function () {
+        var subject = Subject.getSubject();
+        $('#user-account').text(subject['username']);
+    });
+
+    function logout() {
+        $.messager.confirm('提示', '确认退出吗?', function (yes) {
+            if (yes) {
+                location.href = '../sso/login.html';
+            }
+        });
+    }
+</script>
