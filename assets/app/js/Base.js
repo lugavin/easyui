@@ -235,23 +235,6 @@
         return output;
     }
 
-    function hasOwnProperty(obj, prop) {
-        return Object.prototype.hasOwnProperty.call(obj, prop);
-    }
-
-    function stringifyPrimitive(v) {
-        switch (typeof v) {
-            case 'string':
-                return v;
-            case 'boolean':
-                return v ? 'true' : 'false';
-            case 'number':
-                return isFinite(v) ? v : '';
-            default:
-                return '';
-        }
-    }
-
     function base64Decode(input) {
         var output = '',
             chr1, chr2, chr3,
@@ -282,6 +265,23 @@
         }
 
         return output;
+    }
+
+    function hasOwnProperty(obj, prop) {
+        return Object.prototype.hasOwnProperty.call(obj, prop);
+    }
+
+    function stringifyPrimitive(v) {
+        switch (typeof v) {
+            case 'string':
+                return v;
+            case 'boolean':
+                return v ? 'true' : 'false';
+            case 'number':
+                return isFinite(v) ? v : '';
+            default:
+                return '';
+        }
     }
 
     function parse(qs, sep, eq, options) {
