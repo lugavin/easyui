@@ -40,21 +40,19 @@
     Base.isPhone = isPhone;
 
     Base.trim = trim;
-    Base.getURLParam = getURLParam;
-    Base.buildURLParams = buildURLParams;
 
-    Base.getContextPath = getContextPath;
-
-    Base.post = post;
+    Base.encodeURLParam = encodeURLParam;
+    Base.decodeURLParam = decodeURLParam;
+    Base.resolveURLParam = resolveURLParam;
 
     Base.base64Encode = base64Encode;
     Base.base64Decode = base64Decode;
 
-    Base.parse = parse;
-    Base.stringify = stringify;
+    Base.post = post;
+    Base.getContextPath = getContextPath;
 
     function format() {
-        if (arguments.length == 0) {
+        if (arguments.length === 0) {
             return '';
         }
         var str = arguments[0];
@@ -119,17 +117,28 @@
         return (text || '').trim();
     }
 
-    function getURLParam(name) {
-        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ''])[1].replace(/\+/g, '%20')) || null;
+    /**
+     * @param {string} body
+     * @returns {object}
+     */
+    function decodeURLParam(body) {
+        var obj = {};
+        trim(body).split('&').forEach(function (bytes) {
+            if (bytes) {
+                var split = bytes.split('=');
+                var name = split.shift().replace(/\+/g, ' ');
+                var value = split.join('=').replace(/\+/g, ' ');
+                obj[decodeURIComponent(name)] = decodeURIComponent(value);
+            }
+        });
+        return obj;
     }
 
     /**
-     *
-     * @param {Array|Object} obj
+     * @param {array|object} obj
      * @returns {string}
      */
-    function buildURLParams(obj) {
-
+    function encodeURLParam(obj) {
         var params = [];
 
         var add = function (key, value) {
@@ -170,37 +179,13 @@
         return params.join('&').replace(/%20/g, '+');
     }
 
-    function getContextPath() {
-        var curWwwPath = window.document.location.href;
-        var pathName = window.document.location.pathname;
-        var localPath = curWwwPath.substring(0, curWwwPath.indexOf(pathName));
-        var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
-        return localPath + projectName;
-    }
-
     /**
-     * @param {String} url
-     * @param {object=} data
-     * @param {Function=} callback
+     *
+     * @param {string} name
+     * @returns {string | null}
      */
-    function post(url, data, callback) {
-        var args = Array.prototype.slice.call(arguments);
-        // 移除数组中的第一个元素并返回该元素
-        url = args.shift();
-        // 移除数组中的最后一个元素并返回该元素
-        if (typeof args[args.length - 1] === 'function') {
-            callback = args.pop();
-        }
-        // 如果args中仍有元素, 那就是可选参数, 使用以下方法逐个取出
-        data = args.length > 0 ? args.shift() : {};
-        var xhr = window.XMLHttpRequest ? new window.XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                callback && callback(JSON.parse(xhr.responseText));
-            }
-        };
-        xhr.open('POST', url, true);
-        xhr.send(data);
+    function resolveURLParam(name) {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ''])[1].replace(/\+/g, '%20')) || null;
     }
 
     function base64Encode(input) {
@@ -267,98 +252,37 @@
         return output;
     }
 
-    function hasOwnProperty(obj, prop) {
-        return Object.prototype.hasOwnProperty.call(obj, prop);
-    }
-
-    function stringifyPrimitive(v) {
-        switch (typeof v) {
-            case 'string':
-                return v;
-            case 'boolean':
-                return v ? 'true' : 'false';
-            case 'number':
-                return isFinite(v) ? v : '';
-            default:
-                return '';
+    /**
+     * @param {string} url
+     * @param {object=} data
+     * @param {function=} callback
+     */
+    function post(url, data, callback) {
+        var args = Array.prototype.slice.call(arguments);
+        // 移除数组中的第一个元素并返回该元素
+        url = args.shift();
+        // 移除数组中的最后一个元素并返回该元素
+        if (typeof args[args.length - 1] === 'function') {
+            callback = args.pop();
         }
-    }
-
-    function parse(qs, sep, eq, options) {
-        sep = sep || '&';
-        eq = eq || '=';
-        var obj = {};
-
-        if (typeof qs !== 'string' || qs.length === 0) {
-            return obj;
-        }
-
-        var regexp = /\+/g;
-        qs = qs.split(sep);
-
-        var maxKeys = 1000;
-        if (options && typeof options.maxKeys === 'number') {
-            maxKeys = options.maxKeys;
-        }
-
-        var len = qs.length;
-        // maxKeys <= 0 means that we should not limit keys count
-        if (maxKeys > 0 && len > maxKeys) {
-            len = maxKeys;
-        }
-
-        for (var i = 0; i < len; ++i) {
-            var x = qs[i].replace(regexp, '%20'),
-                idx = x.indexOf(eq),
-                kstr, vstr, k, v;
-
-            if (idx >= 0) {
-                kstr = x.substr(0, idx);
-                vstr = x.substr(idx + 1);
-            } else {
-                kstr = x;
-                vstr = '';
+        // 如果args中仍有元素, 那就是可选参数, 使用以下方法逐个取出
+        data = args.length > 0 ? args.shift() : {};
+        var xhr = window.XMLHttpRequest ? new window.XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                callback && callback(JSON.parse(xhr.responseText));
             }
-
-            k = decodeURIComponent(kstr);
-            v = decodeURIComponent(vstr);
-
-            if (!hasOwnProperty(obj, k)) {
-                obj[k] = v;
-            } else if (Array.isArray(obj[k])) {
-                obj[k].push(v);
-            } else {
-                obj[k] = [obj[k], v];
-            }
-        }
-
-        return obj;
+        };
+        xhr.open('POST', url, true);
+        xhr.send(data);
     }
 
-    function stringify(obj, sep, eq, name) {
-        sep = sep || '&';
-        eq = eq || '=';
-        if (obj === null) {
-            obj = undefined;
-        }
-
-        if (typeof obj === 'object') {
-            return Object.keys(obj).map(function (k) {
-                var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
-                if (Array.isArray(obj[k])) {
-                    return obj[k].map(function (v) {
-                        return ks + encodeURIComponent(stringifyPrimitive(v));
-                    }).join(sep);
-                } else {
-                    return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
-                }
-            }).filter(Boolean).join(sep);
-
-        }
-
-        if (!name) return '';
-        return encodeURIComponent(stringifyPrimitive(name)) + eq +
-            encodeURIComponent(stringifyPrimitive(obj));
+    function getContextPath() {
+        var curWwwPath = window.document.location.href;
+        var pathName = window.document.location.pathname;
+        var localPath = curWwwPath.substring(0, curWwwPath.indexOf(pathName));
+        var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+        return localPath + projectName;
     }
 
 });
