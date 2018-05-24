@@ -24,9 +24,9 @@ KindEditor.plugin('imagepaste', function (K) {
                         formData.append(self.filePostName, imgFile);
                         var xhr = window.XMLHttpRequest ? new window.XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
                         xhr.onreadystatechange = function () {
-                            if (xhr.readyState == 4 && xhr.status == 200) {
+                            if (xhr.readyState === 4 && xhr.status === 200) {
                                 var resp = JSON.parse(xhr.responseText);
-                                if (resp.error == 0) {
+                                if (resp.ok) {
                                     cmd.insertimage(resp.url, resp.data.originalName);
                                 }
                             }

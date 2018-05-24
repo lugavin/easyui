@@ -32,7 +32,8 @@
                         <strong id="login-failure"></strong>
                     </div>
                     <p></p>
-                    <form id="login-form" name="form" method="post" action="../cms/index.html" role="form" autocomplete="off">
+                    <form id="login-form" name="form" method="post" action="../cms/index.html" role="form"
+                          autocomplete="off">
                         <fieldset>
                             <div class="form-group">
                                 <label class="control-label sr-only" for="username">帐号</label>
@@ -111,11 +112,11 @@
             //     data: $form.serialize(),
             //     type: 'POST',
             //     dataType: 'json',
-            //     success: function (resp) {
+            //     success: function (data, statusText, jqXHR) {
             //         var redirectURL = Base.resolveURLParam('redirectURL');
             //         location.href = !redirectURL ? '/cms/index.html' : decodeURIComponent(redirectURL)
             //     },
-            //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+            //     error: function (jqXHR, statusText, error) {
             //         $btn.button('reset');
             //     }
             // });
