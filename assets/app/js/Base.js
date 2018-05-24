@@ -41,8 +41,8 @@
 
     Base.trim = trim;
 
-    Base.encodeURLParam = encodeURLParam;
-    Base.decodeURLParam = decodeURLParam;
+    Base.encodeURLParams = encodeURLParams;
+    Base.decodeURLParams = decodeURLParams;
     Base.resolveURLParam = resolveURLParam;
 
     Base.base64Encode = base64Encode;
@@ -118,32 +118,64 @@
     }
 
     /**
-     * @param {string} body
+     * @param {string} serializedParams
      * @returns {object}
+     * @see https://github.com/jupiterjs/jquerymx/blob/master/lang/string/deparam/deparam.js
      */
-    function decodeURLParam(body) {
-        var obj = {};
-        trim(body).split('&').forEach(function (bytes) {
-            if (bytes) {
-                var split = bytes.split('=');
-                var name = split.shift().replace(/\+/g, ' ');
-                var value = split.join('=').replace(/\+/g, ' ');
-                obj[decodeURIComponent(name)] = decodeURIComponent(value);
+    function decodeURLParams(serializedParams) {
+        var digitTest = /^\d+$/,
+            keyBreaker = /([^\[\]]+)|(\[\])/g,
+            plus = /\+/g,
+            paramTest = /([^?#]*)(#.*)?$/;
+
+        if (!serializedParams || !paramTest.test(serializedParams)) {
+            return {};
+        }
+        var data = {},
+            pairs = serializedParams.split('&'),
+            current;
+
+        for (var i = 0; i < pairs.length; i++) {
+            current = data;
+            var pair = pairs[i].split('=');
+
+            // if we find foo=1+1=2
+            if (pair.length !== 2) {
+                pair = [pair[0], pair.slice(1).join('=')]
             }
-        });
-        return obj;
+
+            var key = decodeURIComponent(pair[0].replace(plus, ' ')),
+                value = decodeURIComponent(pair[1].replace(plus, ' ')),
+                parts = key.match(keyBreaker);
+
+            for (var j = 0; j < parts.length - 1; j++) {
+                var part = parts[j];
+                if (!current[part]) {
+                    // if what we are pointing to looks like an array
+                    current[part] = digitTest.test(parts[j + 1]) || parts[j + 1] === '[]' ? [] : {}
+                }
+                current = current[part];
+            }
+            var lastPart = parts[parts.length - 1];
+            if (lastPart === '[]') {
+                current.push(value)
+            } else {
+                current[lastPart] = value;
+            }
+        }
+        return data;
     }
 
     /**
-     * @param {array|object} obj
+     * @param {array|object} params
      * @returns {string}
      */
-    function encodeURLParam(obj) {
-        var params = [];
+    function encodeURLParams(params) {
+        var parts = [];
 
         var add = function (key, value) {
             value = typeof value === 'function' ? value() : (value == null ? '' : value);
-            params[params.length] = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+            parts[parts.length] = encodeURIComponent(key) + '=' + encodeURIComponent(value);
         };
 
         var buildParams = function (prefix, obj, add) {
@@ -165,18 +197,18 @@
         };
 
         // If an array was passed in, assume that it is an array of form elements.
-        if (Array.isArray(obj)) {
+        if (Array.isArray(params)) {
             // Serialize the form elements
-            obj.forEach(function (e) {
+            params.forEach(function (e) {
                 add(e.name, e.value);
             });
         } else {
-            Object.keys(obj).forEach(function (key) {
-                buildParams(key, obj[key], add);
+            Object.keys(params).forEach(function (key) {
+                buildParams(key, params[key], add);
             });
         }
 
-        return params.join('&').replace(/%20/g, '+');
+        return parts.join('&').replace(/%20/g, '+');
     }
 
     /**
@@ -269,7 +301,7 @@
         data = args.length > 0 ? args.shift() : {};
         var xhr = window.XMLHttpRequest ? new window.XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
         xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
+            if (xhr.readyState === 4 && xhr.status === 200) {
                 callback && callback(JSON.parse(xhr.responseText));
             }
         };
