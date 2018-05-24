@@ -9,6 +9,7 @@ KindEditor.plugin('imagepaste', function (K) {
     } else {
         self.afterCreate(init);
     }
+
     function init() {
         var doc = self.edit.doc;
         var cmd = self.edit.cmd;
@@ -26,9 +27,7 @@ KindEditor.plugin('imagepaste', function (K) {
                         xhr.onreadystatechange = function () {
                             if (xhr.readyState === 4 && xhr.status === 200) {
                                 var resp = JSON.parse(xhr.responseText);
-                                if (resp.ok) {
-                                    cmd.insertimage(resp.url, resp.data.originalName);
-                                }
+                                cmd.insertimage(resp.url);
                             }
                         };
                         xhr.open('POST', self.uploadJson, true);
